@@ -5,11 +5,11 @@
 
 **Note**: Please go through [limitations](#limitations) before you proceed.
        Also, make sure that the [prerequisites](#prerequisites) are met before you proceed with the installation.
-       Currently we are only supporting Linux based Installer (Windows based jazz installer is coming soon). 
+       Currently we are only supporting Linux based Installer (Windows based jazz installer is coming soon).
 
 ## Prerequisites
-* AWS account is required. Ensure that you have the IAM keys with sufficient permissions to create the 
-  [AWS Resources](https://github.com/tmobile/jazz-installer/wiki/Jazz-Supported-Installations#aws-resources) in us-east-1 region. 
+* AWS account is required. Ensure that you have the IAM keys with sufficient permissions to create the
+  [AWS Resources](https://github.com/tmobile/jazz-installer/wiki/Jazz-Supported-Installations#aws-resources) in us-east-1 region.
 * Use RHEL 7 instance as your installer machine [How to Launch AWS RHEL7 Instance](https://github.com/tmobile/jazz-installer/wiki/Launch-AWS-RHEL7-Instance-for-Installer)
 
 
@@ -18,7 +18,7 @@
 2) Run the below command to run the installation wizard.
 
 ```
-curl -L https://raw.githubusercontent.com/tmobile/jazz-installer/master/installscripts/terraforminstaller/rhel7Installer.sh?token=Ad0zYi_WHZ-PCDKtTMmtZZ53zAXbXkMVks5Z327lwA%3D%3D -o rhel7Installer.sh && chmod +x rhel7Installer.sh && ./rhel7Installer.sh master&& cd ./jazz-installer/installscripts/wizard && ./run.py 
+curl -L https://raw.githubusercontent.com/tmobile/jazz-installer/master/installscripts/terraforminstaller/rhel7Installer.sh?token=Ad0zYi_WHZ-PCDKtTMmtZZ53zAXbXkMVks5Z327lwA%3D%3D -o rhel7Installer.sh && chmod +x rhel7Installer.sh && ./rhel7Installer.sh master&& cd ./jazz-installer/installscripts/wizard && ./run.py
 
  ```
 
@@ -33,13 +33,13 @@ curl -L https://raw.githubusercontent.com/tmobile/jazz-installer/master/installs
         Do you need full stack including network(Y/N): Y
 
         * If Y
-      
-              installer will create the network & compute infrastructure. No futher user action is needed! 
+
+              installer will create the network & compute infrastructure. No futher user action is needed!
               Please refer to [Full Stack Installation](https://github.com/tmobile/jazz-installer/wiki/Jazz-Supported-Installations#full-stack-installation)
-      
-              
+
+
         * If N
-      
+
               follow the next set of instructions to install the framework within an existing network.
 
               3.2.1) Do you want to make use of existing Jenkins and Bitbucket infrastructure?
@@ -47,11 +47,11 @@ curl -L https://raw.githubusercontent.com/tmobile/jazz-installer/master/installs
                      Do you have existing Jenkins and Bitbucket Server(Y/N): N
 
                      * If N
-        
+
                             installer will follow the steps specified in [Installation with existing Network](https://github.com/tmobile/jazz-installer/wiki/Jazz-Supported-Installations#installation-with-existing-network). Please follow link Wizard prompts to complete the installation.
 
                      * If Y
-        
+
                             installer will follow the steps specified in [Installation with existing Jenkins and Bitbucket servers](https://github.com/tmobile/jazz-installer/wiki/Jazz-Supported-Installations#installation-with-existing-jenkins-and-bitbucket-servers) - Uses existing Jenkins and Bitbucket Servers (as provided) to build the stack.  Please follow link Wizard prompts to complete the installation.
 
 Check the status through [Installation status](https://github.com/tmobile/jazz-installer/wiki/Jazz-Supported-Installations#installation---status).
@@ -69,7 +69,7 @@ Post successful Installation, framework is ready to use! Start using [Jazz UI](h
 ## Destroy Jazz Framework AWS stack in your AWS Account
 Jazz Installer scripts also includes the destroy Jazz Framework scripts.
 
-To clean up the Jazz Framework please refer [Jazz-Framework-Stack-Destroy](https://github.com/tmobile/jazz-installer/wiki/Jazz-Framework-Stack-Destroy)
+To clean up Jazz components completely, please refer to  [Jazz-Framework-Stack-Destroy](https://github.com/tmobile/jazz-installer/wiki/Jazz-Framework-Stack-Destroy)
 
 ## Wiki
 * [Installer](https://github.com/tmobile/jazz-installer/wiki)
