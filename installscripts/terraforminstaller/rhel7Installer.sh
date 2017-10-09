@@ -115,15 +115,24 @@ setterm -term linux -fore default
 
 read -p 'AWS Access Key ID :' access_key
 read -p 'AWS Secret Access Key :' secret_key
+read -p 'Region name:' region_name
+
 aws_credentials="[default]
 aws_access_key_id = $access_key
 aws_secret_access_key = $secret_key"
 aws_config="[default]
 output = json
-region = us-east-1"
+region = $region_name"
+
 mkdir -p ~/.aws
 echo "$aws_credentials">~/.aws/credentials
 echo "$aws_config">~/.aws/config
+
+sed -i "s|variable \"region\".*.$|variable \"region\" \{ type = \"string\" default = \"$region_name\" \}|g" ../terraform-unix-demo-jazz/variables.tf
+sed -i "s|variable \"region\".*.$|variable \"region\" \{ type = \"string\" default = \"$region_name\" \}|g" ../terraform-unix-existinginstances-jazz/variables.tf
+sed -i "s|variable \"region\".*.$|variable \"region\" \{ type = \"string\" default = \"$region_name\" \}|g" ../terraform-unix-networkstack/variables.tf
+sed -i "s|variable \"region\".*.$|variable \"region\" \{ type = \"string\" default = \"$region_name\" \}|g" ../terraform-unix-noinstances-jazz/variables.tf
+
 
 setterm -term linux -fore green
 setterm -term linux -fore default

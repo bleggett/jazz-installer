@@ -1,7 +1,4 @@
-variable "region" {
-  type = "string"
-  default = "us-east-1"
-}
+variable "region" { type = "string" default = "us-east-1" }
 variable "bitbucketserver_ami" {
   type = "string"
   default = "ami-06360a10"

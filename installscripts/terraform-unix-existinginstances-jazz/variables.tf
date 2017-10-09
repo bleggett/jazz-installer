@@ -1,7 +1,4 @@
-variable "region" {
-  type = "string"
-  default = "us-east-1"
-}
+variable "region" { type = "string" default = "us-east-1" }
 variable "vpc" {
   type = "string"
   default = "vpc-e1b9b784"   // us-east-1
@@ -79,5 +76,23 @@ variable "bitbucketservermap" {
     bitbucket_elb = "please change"
     public_ip = "please change"
     private_ip = "please change"
+  }
+}
+
+variable "jenkinsamimap" {
+  type = "map"
+
+  default = {
+    us-east-1 = "ami-5a293a21"
+    us-west-2 = "ami-0537f27d"
+  }
+}
+
+variable "bitbucketamimap" {
+  type = "map"
+
+  default = {
+    us-east-1 = "ami-9ba986e0"
+    us-west-2 = "ami-1f8e4967"
   }
 }
