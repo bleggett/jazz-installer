@@ -143,7 +143,7 @@ EOF
     command = "${var.sets3acl_cmd} ${aws_s3_bucket.jazz-web.bucket} ${data.aws_canonical_user_id.current.id}"
   }
   provisioner "local-exec" {
-    command = "${var.deployS3Webapp_cmd} ${aws_s3_bucket.jazz-web.bucket} ${var.region}"
+    command = "${var.deployS3Webapp_cmd} ${aws_s3_bucket.jazz-web.bucket} ${var.region} ${data.aws_canonical_user_id.current.id}"
   }  
 
   provisioner "local-exec" {
