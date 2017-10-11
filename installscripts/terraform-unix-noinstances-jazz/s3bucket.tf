@@ -1,3 +1,5 @@
+data "aws_canonical_user_id" "current" {}
+
 resource "aws_s3_bucket" "cloudfrontlogs" {
   bucket_prefix="${var.envPrefix}-cloudfrontlogs-"
   acl    = "public-read-write"
@@ -11,7 +13,7 @@ resource "aws_s3_bucket" "cloudfrontlogs" {
   }
   
   provisioner "local-exec" {
-    command = "${var.sets3acl_cmd} ${aws_s3_bucket.cloudfrontlogs.bucket}"
+    command = "${var.sets3acl_cmd} ${aws_s3_bucket.cloudfrontlogs.bucket} ${data.aws_canonical_user_id.current.id}"
   }
   provisioner "local-exec" {
 	when = "destroy"
@@ -33,7 +35,7 @@ resource "aws_s3_bucket" "oab-apis-deployment-dev" {
   }
   
   provisioner "local-exec" {
-    command = "${var.sets3acl_cmd} ${aws_s3_bucket.oab-apis-deployment-dev.bucket}"
+    command = "${var.sets3acl_cmd} ${aws_s3_bucket.oab-apis-deployment-dev.bucket} ${data.aws_canonical_user_id.current.id}"
   }
   provisioner "local-exec" {
 	when = "destroy"
@@ -55,7 +57,7 @@ resource "aws_s3_bucket" "oab-apis-deployment-stg" {
   }
   
   provisioner "local-exec" {
-    command = "${var.sets3acl_cmd} ${aws_s3_bucket.oab-apis-deployment-stg.bucket}"
+    command = "${var.sets3acl_cmd} ${aws_s3_bucket.oab-apis-deployment-stg.bucket} ${data.aws_canonical_user_id.current.id}"
   }
   provisioner "local-exec" {
 	when = "destroy"
@@ -77,7 +79,7 @@ resource "aws_s3_bucket" "oab-apis-deployment-prod" {
   }
   
   provisioner "local-exec" {
-    command = "${var.sets3acl_cmd} ${aws_s3_bucket.oab-apis-deployment-prod.bucket}"
+    command = "${var.sets3acl_cmd} ${aws_s3_bucket.oab-apis-deployment-prod.bucket} ${data.aws_canonical_user_id.current.id}"
   }
   provisioner "local-exec" {
 	when = "destroy"
@@ -138,7 +140,7 @@ EOF
   }
 
   provisioner "local-exec" {
-    command = "${var.sets3acl_cmd} ${aws_s3_bucket.jazz-web.bucket}"
+    command = "${var.sets3acl_cmd} ${aws_s3_bucket.jazz-web.bucket} ${data.aws_canonical_user_id.current.id}"
   }
   provisioner "local-exec" {
     command = "${var.deployS3Webapp_cmd} ${aws_s3_bucket.jazz-web.bucket} ${var.region}"
