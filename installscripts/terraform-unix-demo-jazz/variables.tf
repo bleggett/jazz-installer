@@ -100,7 +100,7 @@ variable "bitbucketamimap" {
 
   default = {
     us-east-1 = "ami-65a46e1f"
-    us-west-2 = "ami-1f8e4967"
+    us-west-2 = "ami-0cdb1a74"
   }
 }
 
