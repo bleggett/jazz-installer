@@ -1,10 +1,7 @@
-variable "region" {
-  type = "string"
-  default = "us-east-1"
-}
+variable "region" { type = "string" default = "us-east-1" }
 variable "bitbucketserver_ami" {
   type = "string"
-  default = "ami-06360a10"
+  default = "ami-65a46e1f"
 	// amis copied to us-west-1
   //default = "ami-74755c14"
 }

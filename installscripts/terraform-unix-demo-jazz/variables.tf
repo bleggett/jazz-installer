@@ -1,7 +1,4 @@
-variable "region" {
-  type = "string"
-  default = "us-east-1"
-}
+variable "region" { type = "string" default = "us-east-1" }
 /* moved to netVars.tf
 variable "vpc" {
   type = "string"
@@ -25,7 +22,7 @@ variable "cidrblocks" {
 variable "bitbucketserver_ami" {
   type = "string"
 	// ami in us-east1 with licenses and addons licenses
-  default = "ami-9ba986e0"
+  default = "ami-65a46e1f"
 	// ami copied to us-west-1 with licenses and addons
   //default = "ami-74755c14"
 }
@@ -89,4 +86,22 @@ variable "github_password" {
   type = "string"
   default = "Tmobiledemo1"
 }
+
+variable "jenkinsamimap" {
+  type = "map"
+
+  default = {
+    us-east-1 = "ami-5a293a21"
+    us-west-2 = "ami-0537f27d"
+  }
+}
+variable "bitbucketamimap" {
+  type = "map"
+
+  default = {
+    us-east-1 = "ami-65a46e1f"
+    us-west-2 = "ami-1f8e4967"
+  }
+}
+
 variable "github_branch" { type = "string" default = "development" }

@@ -1,7 +1,7 @@
 @ECHO OFF
 set BITBUCKETELB=%1
 
-git config --global user.email "harin.jose@ust-global.com"
+git config --global user.email "jazzbitbucket6360@gmail.com"
 git config --global user.name "jenkins1"
   
 md jazz-core-bitbucket

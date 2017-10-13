@@ -10,6 +10,6 @@ default['bitbucket']['propertiesfile'] = #{node['bitbucket']['bitbucketHome']}/s
 default['bitbucket']['properties']['baseUrl'] = #{node['bitbucketelb.dns_name']}
 default['bitbucket']['properties']['sysadmin.username'] = 'ustadmin'
 default['bitbucket']['properties']['sysadmin.displayName'] = 'ustsysadmin'
-default['bitbucket']['properties']['sysadmin.emailAddress'] = 'harin.jose@ust-global.com'
+default['bitbucket']['properties']['sysadmin.emailAddress'] = 'jazzbitbucket6360@gmail.com'
 default['bitbucket']['startCommand']    = "#{node['bitbucket']['defaultInstallDir']}/bin/start-bitbucket.sh"
 
