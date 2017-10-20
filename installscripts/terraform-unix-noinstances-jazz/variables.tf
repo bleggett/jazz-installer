@@ -42,9 +42,11 @@ variable "jenkinsservermap" {
 
   default = {
     jenkins_elb = "jazz13-jenkinselb-1989578044.us-east-1.elb.amazonaws.com"
-    jenkins_public_ip = "54.210.15.20"
+    jenkins_public_ip = "replace IP here"
     subnet = "subnet-c5caafee"
     security_group = "sg-9f725bee"
+	jenkins_ssh_login = "ec2-user"
+	jenkins_ssh_key = "../sshkeys/jenkinskey.pem"
   }
 }
 variable "bitbucketservermap" {
@@ -52,7 +54,9 @@ variable "bitbucketservermap" {
 
   default = {
     bitbucket_elb = "jazz13-bitbucketelb-977486464.us-east-1.elb.amazonaws.com"
-    bitbucket_public_ip = "54.163.38.213"
+    bitbucket_public_ip = "replace IP here"
+	bitbucket_ssh_login = "ec2-user"
+	bitbucket_ssh_key = "../sshkeys/bbkey.pem"
   }
 }
 variable "lambdaCloudWatchProps" {

@@ -26,11 +26,22 @@ print(" Please create the following adminid/password on Bitbucket Server before 
 pause()
 jenkinsServerELB = raw_input("Please provide Jenkins Server ELB URL: ")
 jenkinsServerPublicIp = raw_input("Please provide Jenkins Server PublicIp: ")
+jenkinsServerSSHLogin = raw_input("Please provide Jenkins SSH login name: ")
+jenkinsServerSSHKey = raw_input("Please provide Jenkins SSH private key: ")
+
 bitBucketServerELB = raw_input("Please provide Bitbuckket  Server ELB URL: ")
 bitBucketServerPublicIp = raw_input("Please provide bitbucket Server PublicIp: ")
+bitBucketServerSSHLogin = raw_input("Please provide bitbucket SSH login name: ")
+bitBucketServerSSHKey = raw_input("Please provide bitbucket SSH private key: ")
 
+with open("../sshkeys/jenkinskey.pem", "w") as jenkinsKey:
+    jenkinsKey.write(jenkinsServerSSHKey)
+	
+with open("../sshkeys/bbkey.pem", "w") as bbKey:
+    bbKey.write(bitBucketServerSSHKey)
+	
 os.chdir("../terraform-unix-networkstack")
-cmd = ["./scripts/createServerVars.sh", jenkinsServerELB, jenkinsServerPublicIp, bitBucketServerELB, bitBucketServerPublicIp, "../terraform-unix-noinstances-jazz/variables.tf"]
+cmd = ["./scripts/createServerVars.sh", jenkinsServerELB, jenkinsServerPublicIp, bitBucketServerELB, bitBucketServerPublicIp, "../terraform-unix-noinstances-jazz/variables.tf",jenkinsServerSSHLogin,bitBucketServerSSHLogin]
 subprocess.call(cmd)
 cmd = ["./scripts/createTags.sh", tagEnvPrefix, tagApplication, tagEnvironment, tagExempt, tagOwner, "../terraform-unix-noinstances-jazz/envprefix.tf"]
 subprocess.call(cmd)
