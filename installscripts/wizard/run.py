@@ -23,7 +23,10 @@ tagOwner=tagEnvPrefix+"-Admin"
 
 print(" Please create the following adminid/password on Jenkins Server before you proceed: jenkinsadmin/jenkinsadmin")
 print(" Please create the following adminid/password on Bitbucket Server before you proceed: jenkins1/jenkinsadmin")
+print(" Please make sure that you have the ssh login user names of jenkins and bitbucket servers.")
+print(" Please create jenkinskey.pem and bitbucketkey.pem with private keys of Jenkins and Bitbucket in /home/ec2-user")
 pause()
+
 jenkinsServerELB = raw_input("Please provide Jenkins Server ELB URL: ")
 jenkinsServerPublicIp = raw_input("Please provide Jenkins Server PublicIp: ")
 jenkinsServerSSHLogin = raw_input("Please provide Jenkins SSH login name: ")
