@@ -35,8 +35,8 @@ bitBucketServerELB = raw_input("Please provide Bitbuckket  Server ELB URL: ")
 bitBucketServerPublicIp = raw_input("Please provide bitbucket Server PublicIp: ")
 bitBucketServerSSHLogin = raw_input("Please provide bitbucket SSH login name: ")
 
-subprocess.call('sudo cp ../../../jenkinskey.pem ../sshkeys && sudo chmod 400 ../sshkeys/jenkinskey.pem', shell=True)
-subprocess.call('sudo cp ../../../bitbucketkey.pem ../sshkeys/ && sudo chmod 400 ../sshkeys/bitbucketkey.pem', shell=True)
+subprocess.call('cp ../../../jenkinskey.pem ../sshkeys && sudo chmod 400 ../sshkeys/jenkinskey.pem', shell=True)
+subprocess.call('cp ../../../bitbucketkey.pem ../sshkeys/ && sudo chmod 400 ../sshkeys/bitbucketkey.pem', shell=True)
 
 	
 os.chdir("../terraform-unix-networkstack")
