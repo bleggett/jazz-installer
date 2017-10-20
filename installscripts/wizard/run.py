@@ -27,18 +27,14 @@ pause()
 jenkinsServerELB = raw_input("Please provide Jenkins Server ELB URL: ")
 jenkinsServerPublicIp = raw_input("Please provide Jenkins Server PublicIp: ")
 jenkinsServerSSHLogin = raw_input("Please provide Jenkins SSH login name: ")
-jenkinsServerSSHKey = raw_input("Please provide Jenkins SSH private key: ")
 
 bitBucketServerELB = raw_input("Please provide Bitbuckket  Server ELB URL: ")
 bitBucketServerPublicIp = raw_input("Please provide bitbucket Server PublicIp: ")
 bitBucketServerSSHLogin = raw_input("Please provide bitbucket SSH login name: ")
-bitBucketServerSSHKey = raw_input("Please provide bitbucket SSH private key: ")
 
-with open("../sshkeys/jenkinskey.pem", "w") as jenkinsKey:
-    jenkinsKey.write(jenkinsServerSSHKey)
-	
-with open("../sshkeys/bbkey.pem", "w") as bbKey:
-    bbKey.write(bitBucketServerSSHKey)
+subprocess.call('cp ../../../jenkinskey.pem ../sshkeys && chmod 400 ../sshkeys/jenkinskey.pem', shell=True)
+subprocess.call('cp ../../../bitbucketkey.pem ../sshkeys && chmod 400 ../sshkeys/bbkey.pem', shell=True)
+
 	
 os.chdir("../terraform-unix-networkstack")
 cmd = ["./scripts/createServerVars.sh", jenkinsServerELB, jenkinsServerPublicIp, bitBucketServerELB, bitBucketServerPublicIp, "../terraform-unix-noinstances-jazz/variables.tf",jenkinsServerSSHLogin,bitBucketServerSSHLogin]
