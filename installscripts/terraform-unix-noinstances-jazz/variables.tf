@@ -56,7 +56,7 @@ variable "bitbucketservermap" {
     bitbucket_elb = "jazz13-bitbucketelb-977486464.us-east-1.elb.amazonaws.com"
     bitbucket_public_ip = "replace IP here"
 	bitbucket_ssh_login = "ec2-user"
-	bitbucket_ssh_key = "../sshkeys/bbkey.pem"
+	bitbucket_ssh_key = "../sshkeys/bitbucketkey.pem"
   }
 }
 variable "lambdaCloudWatchProps" {
