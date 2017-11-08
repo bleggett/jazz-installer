@@ -146,7 +146,7 @@ resource "aws_instance" "jenkinsserver" {
   key_name   = "${var.envPrefix}-${lookup(var.keypair, "key_name")}"
   vpc_security_group_ids = ["${aws_security_group.jenkins.id}"]
   subnet_id = "${var.subnet}"
-  depends_on = ["aws_elb.jenkinselb","aws_elb.bitbucketelb","aws_api_gateway_rest_api.jazz-dev","aws_s3_bucket.jazz-web","aws_iam_role.lambda_role" ]
+  depends_on = ["aws_elb.jenkinselb","aws_elb.bitbucketelb","aws_api_gateway_rest_api.jazz-dev","aws_s3_bucket.jazz-web","aws_iam_role.lambda_role","aws_elasticsearch_domain.elasticsearch_domain" ]
   tags {  
     Name = "${var.envPrefix}_jenkinsserver"
     Application = "${var.tagsApplication}"
