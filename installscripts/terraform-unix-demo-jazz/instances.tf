@@ -1,6 +1,25 @@
-resource "aws_key_pair" "auth" {
-  key_name   = "${var.envPrefix}-${lookup(var.keypair, "key_name")}"
-  public_key = "${file("${lookup(var.keypair, "public_key")}")}"
+resource "null_resource" "jenkins_key_pair" {
+
+provisioner "local-exec" {
+    command = "${var.createkeypair_cmd} ${var.envPrefix}-jenkins-key ${lookup(var.jenkinsservermap, "jenkins_ssh_key")}"
+  }  
+provisioner "local-exec" {
+    when = "destroy"
+  command = "${var.deletekeypair_cmd} ${var.envPrefix}-jenkins-key"
+  }
+
+}
+
+resource "null_resource" "bitbucket_key_pair" {
+
+provisioner "local-exec" {
+    command = "${var.createkeypair_cmd} ${var.envPrefix}-bitbucket-key ${lookup(var.bitbucketservermap, "bitbucket_ssh_key")}"
+  }  
+provisioner "local-exec" {
+    when = "destroy"
+  command = "${var.deletekeypair_cmd} ${var.envPrefix}-bitbucket-key"
+  }
+
 }
 
 data "aws_subnet" "selected" {
@@ -143,10 +162,10 @@ resource "aws_security_group" "bitbucket" {
 resource "aws_instance" "jenkinsserver" {
   instance_type = "t2.medium"
   ami = "${var.jenkinsserver_ami}"
-  key_name   = "${var.envPrefix}-${lookup(var.keypair, "key_name")}"
+  key_name   = "${var.envPrefix}-jenkins-key"
   vpc_security_group_ids = ["${aws_security_group.jenkins.id}"]
   subnet_id = "${var.subnet}"
-  depends_on = ["aws_elb.jenkinselb","aws_elb.bitbucketelb","aws_api_gateway_rest_api.jazz-dev","aws_s3_bucket.jazz-web","aws_iam_role.lambda_role","aws_elasticsearch_domain.elasticsearch_domain" ]
+  depends_on = ["aws_elb.jenkinselb","aws_elb.bitbucketelb","aws_api_gateway_rest_api.jazz-dev","aws_s3_bucket.jazz-web","aws_iam_role.lambda_role","aws_elasticsearch_domain.elasticsearch_domain","null_resource.jenkins_key_pair"]
   tags {  
     Name = "${var.envPrefix}_jenkinsserver"
     Application = "${var.tagsApplication}"
@@ -158,7 +177,7 @@ resource "aws_instance" "jenkinsserver" {
   connection {
     user = "ec2-user"
 	type     = "ssh"
-	private_key = "${file("${lookup(var.keypair, "private_key")}")}"
+	private_key = "${file("${lookup(var.jenkinsservermap, "jenkins_ssh_key")}")}"
   }   
   provisioner "file" {
 	  source      = "${var.cookbooksDir}/jenkins/recipes/startjenkins.rb"
@@ -205,10 +224,10 @@ resource "aws_instance" "jenkinsserver" {
 resource "aws_instance" "bitbucketserver" {
   instance_type = "t2.medium"
   ami = "${var.bitbucketserver_ami}"
-  key_name   = "${var.envPrefix}-${lookup(var.keypair, "key_name")}"
+  key_name   = "${var.envPrefix}-bitbucket-key"
   vpc_security_group_ids = ["${aws_security_group.bitbucket.id}"]
   subnet_id = "${var.subnet}"
-  depends_on = ["aws_elb.bitbucketelb"]
+  depends_on = ["aws_elb.bitbucketelb","null_resource.bitbucket_key_pair"]
   tags {  Name = "${var.envPrefix}_bitbucketserver"
     Application = "${var.tagsApplication}"
     Environment = "${var.tagsEnvironment}"
@@ -217,7 +236,7 @@ resource "aws_instance" "bitbucketserver" {
   connection {
     user = "ec2-user"
 	type     = "ssh"
-	private_key = "${file("${lookup(var.keypair, "private_key")}")}"
+	private_key = "${file("${lookup(var.bitbucketservermap, "bitbucket_ssh_key")}")}"
   } 
   provisioner "file" {
 	  source      = "${var.chefconfigDir}/bitbucketelbconfig.json"

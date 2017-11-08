@@ -89,4 +89,21 @@ variable "github_password" {
   type = "string"
   default = "Tmobiledemo1"
 }
+variable "jenkinsservermap" {
+  type = "map"
+
+  default = {
+	jenkins_ssh_login = "ec2-user"
+	jenkins_ssh_key = "../sshkeys/jenkinskey.pem"
+  }
+}
+variable "bitbucketservermap" {
+  type = "map"
+
+  default = {
+	bitbucket_ssh_login = "ec2-user"
+	bitbucket_ssh_key = "../sshkeys/bitbucketkey.pem"
+  }
+}
+
 variable "github_branch" { type = "string" default = "development" }

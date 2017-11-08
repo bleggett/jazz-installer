@@ -63,3 +63,11 @@ variable "modifyPropertyFile_cmd" {
   type = "string"
   default = "./scripts/modifyPropertyFile.sh"
 }
+variable "createkeypair_cmd" {
+  type = "string"
+  default = "./scripts/createKeypair.sh"
+}
+variable "deletekeypair_cmd" {
+  type = "string"
+  default = "./scripts/deleteKeypair.sh"
+}
