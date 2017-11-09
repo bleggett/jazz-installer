@@ -30,7 +30,7 @@ resource "aws_elasticsearch_domain" "elasticsearch_domain" {
 POLICIES
 
 		provisioner "local-exec" {
-		command = "${var.configureESEndpoint_cmd} ${aws_elasticsearch_domain.elasticsearch_domain.endpoint} ${lookup(var.jenkinsservermap, "jenkins_elb")} ${var.region}"
+		command = "${var.configureESEndpoint_cmd} ${aws_elasticsearch_domain.elasticsearch_domain.endpoint} ${aws_elb.jenkinselb.dns_name} ${var.region}"
 	  }
   
 }
