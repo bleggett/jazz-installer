@@ -12,14 +12,17 @@ RUN apk add --no-cache \
     libffi-dev \
     openssl-dev \
     git \
-  && pip install aws \
+  && pip --no-cache-dir install aws \
   && apk del --no-cache \
      python-dev \
+     py-pip \
      build-base \
      libffi-dev \
      openssl-dev \
   && mkdir $INSTALL_DIR \
   && curl -L $ATLASSIAN_CLI_URL -o $INSTALL_DIR/atlassian-cli-6.7.1-distribution.zip \
   && unzip -o $INSTALL_DIR/atlassian-cli-6.7.1-distribution.zip \
+  && rm $INSTALL_DIR/atlassian-cli-6.7.1-distribution.zip \
   && curl -v -L $TERRAFORM_URL -o $INSTALL_DIR/terraform.zip \
-  && unzip -o $INSTALL_DIR/terraform.zip -d /usr/bin
+  && unzip -o $INSTALL_DIR/terraform.zip -d /usr/bin \
+  && rm $INSTALL_DIR/terraform.zip \
