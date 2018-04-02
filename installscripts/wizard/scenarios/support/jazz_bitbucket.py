@@ -1,8 +1,7 @@
 #!/usr/bin/python
-import os
 import sys
 import subprocess
-from jazz_common import HOME_FOLDER, TFVARS_FILE, replace_tfvars
+from jazz_common import TERRAFORM_FOLDER_PATH, getJazzRoot, replace_tfvars
 
 
 def add_bitbucket_config_to_files(parameter_list):
@@ -14,19 +13,20 @@ def add_bitbucket_config_to_files(parameter_list):
                             bitbucket_server_public_ip]
      """
 
-    replace_tfvars('scm_elb', parameter_list[0], TFVARS_FILE)
-    replace_tfvars('scm_username', parameter_list[1], TFVARS_FILE)
-    replace_tfvars('scm_passwd', parameter_list[2], TFVARS_FILE)
-    replace_tfvars('scm_publicip', parameter_list[3], TFVARS_FILE)
-    replace_tfvars('scm_type', 'bitbucket', TFVARS_FILE)
-    replace_tfvars('scm_pathext', '/scm', TFVARS_FILE)
+    tfvars_file = getJazzRoot + TERRAFORM_FOLDER_PATH + "terraform.tfvars"
+    replace_tfvars('scm_elb', parameter_list[0], tfvars_file)
+    replace_tfvars('scm_username', parameter_list[1], tfvars_file)
+    replace_tfvars('scm_passwd', parameter_list[2], tfvars_file)
+    replace_tfvars('scm_publicip', parameter_list[3], tfvars_file)
+    replace_tfvars('scm_type', 'bitbucket', tfvars_file)
+    replace_tfvars('scm_pathext', '/scm', tfvars_file)
 
 
 def check_bitbucket_user(url, username, passwd):
     """
         Check if the bitbucket user is present in Bitbucket server
     """
-    bitbucket_sh = HOME_FOLDER + "/atlassian-cli-6.7.1/bitbucket.sh"
+    bitbucket_sh = getJazzRoot() + "/../atlassian-cli-6.7.1/bitbucket.sh"
     bitbucket_url = 'http://' + url + ''
     subprocess.call(['sudo', 'chmod', '+x', bitbucket_sh])
     cmd = [
@@ -53,12 +53,11 @@ def check_bitbucket_user(url, username, passwd):
         return 0
 
 
-def get_and_add_existing_bitbucket_config(terraform_folder):
+def get_and_add_existing_bitbucket_config():
     """
         Get the exisintg Bitbucket server details from user,
         validate and change the config files.
     """
-    os.chdir(terraform_folder)
 
     # Get Existing Bitbucket Details form user
     print "\nPlease provide Bitbucket Details.."

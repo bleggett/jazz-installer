@@ -11,8 +11,9 @@ RUN apk add --no-cache \
     build-base \
     libffi-dev \
     openssl-dev \
+    libxml2
     git \
-  && pip --no-cache-dir install awscli \
+  && pip --no-cache-dir install awscli beautifulsoup4 lxml \
   && apk del --no-cache \
      python-dev \
      build-base \

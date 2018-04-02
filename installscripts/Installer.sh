@@ -17,7 +17,7 @@ INSTALLER_GITHUB_URL="https://github.com/tmobile/jazz-installer.git"
 
 # Installation directory
 INSTALL_DIR=`pwd`
-REPO_PATH=$INSTALL_DIR/jazz-installer
+export REPO_PATH=$INSTALL_DIR/jazz-installer
 
 # Log file to record the installation logs
 JAZZ_BRANCH=""
@@ -37,7 +37,6 @@ function install_packages () {
 
 function post_installation () {
   # Move the software install log jazz Installer
-  mv $LOG_FILE $REPO_PATH
 
   # Set the permissions
   chmod -R +x $REPO_PATH/installscripts/*
@@ -46,7 +45,7 @@ function post_installation () {
   # Call the python script to continue installation process
   cd $REPO_PATH/installscripts/wizard
   #sed -i "s|\"jazz_install_dir\".*$|\"jazz_install_dir\": \"$INSTALL_DIR\"|g" config.py
-  python ./run.py $JAZZ_BRANCH $INSTALL_DIR
+  python ./run.py $JAZZ_BRANCH $REPO_PATH
 
   # Clean up the jazz_tmp folder
   rm -rf $INSTALL_DIR/jazz_tmp

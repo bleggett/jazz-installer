@@ -1,8 +1,9 @@
 #!/usr/bin/python
 import os
 import subprocess
+import urllib2
 
-from jazz_common import TFVARS_FILE, replace_tfvars
+from jazz_common import replace_tfvars, getJazzRoot, TERRAFORM_FOLDER_PATH
 
 
 def add_gitlab_config_to_files(parameter_list):
@@ -13,21 +14,22 @@ def add_gitlab_config_to_files(parameter_list):
                         gitlab_passwd ]
     """
     print("Adding Gitlab config to Terraform variables")
-    replace_tfvars('scm_publicip', parameter_list[0], TFVARS_FILE)
-    replace_tfvars('scm_username', parameter_list[1], TFVARS_FILE)
-    replace_tfvars('scm_passwd', parameter_list[2], TFVARS_FILE)
-    replace_tfvars('scm_type', 'gitlab', TFVARS_FILE)
-    replace_tfvars('scm_pathext', '/', TFVARS_FILE)
+    tfvars_file = getJazzRoot() + TERRAFORM_FOLDER_PATH + "terraform.tfvars"
+    replace_tfvars('scm_publicip', parameter_list[0], tfvars_file)
+    replace_tfvars('scm_username', parameter_list[1], tfvars_file)
+    replace_tfvars('scm_passwd', parameter_list[2], tfvars_file)
+    replace_tfvars('scm_type', 'gitlab', tfvars_file)
+    replace_tfvars('scm_pathext', '/', tfvars_file)
 
 
 def get_and_add_docker_gitlab_config(gitlab_docker_path):
     """
         Launch a Dockerized Gitlab server.
     """
-    os.chdir(gitlab_docker_path)
+    os.chdir(getJazzRoot() + TERRAFORM_FOLDER_PATH + "dockerfiles/gitlab/")
     print("Running docker launch script  for gitlab")
     subprocess.call([
-        'bash', 'launch_gitlab_docker.sh', '|', 'tee', '-a',
+        'sh', 'launch_gitlab_docker.sh', '|', 'tee', '-a',
         '../../gitlab_creation.out'
     ])
     print("Gitlab container launched")
