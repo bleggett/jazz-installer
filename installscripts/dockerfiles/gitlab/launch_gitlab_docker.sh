@@ -31,17 +31,6 @@ spin_wheel()
     fi
 }
 
-# Check if docker with same name exists. If yes, stop and remove the docker container.
-docker ps -a | grep -i gitlab &> /dev/null
-if [ $? == 0 ] ; then
-    echo "Detected a container with name: gitlab. Deleting it..."
-    docker stop gitlab &> /dev/null &
-    spin_wheel $! "Stopping existing Gitlab Docker"
-    docker rm gitlab &> /dev/null &
-    spin_wheel $! "Removing existing Gitlab Docker"
-    sudo rm -rf /srv/gitlab/*
-fi
-
 # Grabbing IP of the instance
 ip=`curl -sL http://169.254.169.254/latest/meta-data/public-ipv4`
 
@@ -50,21 +39,6 @@ attrbsfile=$JAZZ_ROOT/jazz-installer/installscripts/cookbooks/jenkins/attributes
 sed -i "s|default\['scm'\].*.|default\['scm'\]='gitlab'|g" $attrbsfile
 sed -i "s|default\['scmelb'\].*.|default\['scmelb'\]='$ip'|g" $attrbsfile
 sed -i "s|default\['scmpath'\].*.|default\['scmpath'\]='$ip'|g" $attrbsfile
-
-# Running the Gitlab Docker
-docker run --detach \
-    --hostname $ip \
-    --publish 443:443 --publish 80:80 --publish 2201:22 \
-    --name gitlab \
-    --restart always \
-    --volume /srv/gitlab/config:/etc/gitlab \
-    --volume /srv/gitlab/logs:/var/log/gitlab \
-    --volume /srv/gitlab/data:/var/opt/gitlab \
-    gitlab/gitlab-ce:latest &> /dev/null &
-spin_wheel $! "Initializing the Gitlab Docker"
-
-sleep 180 &
-spin_wheel $! "Launching the Gitlab Docker"
 
 # Setting up admin credentials
 passwd=`date | md5sum | cut -d ' ' -f1`

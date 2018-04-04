@@ -1,9 +1,9 @@
 provider "docker" {
 }
 
-resource "docker_container" "gitlab" {
-  image = "${docker_image.gitlab.latest}"
-  name  = "gitlab"
+resource "docker_container" "jenkins" {
+  image = "${docker_image.jenkins.latest}"
+  name  = "jenkins"
   //hostname = ${ip}
   restart = "always"
   must_run = true
@@ -54,7 +54,7 @@ resource "docker_container" "gitlab" {
 
 }
 
-resource "docker_image" "gitlab" {
+resource "docker_image" "jenkins" {
   name = "gitlab/gitlab-ce:latest"
 }
 

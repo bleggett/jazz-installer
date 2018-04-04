@@ -1,5 +1,4 @@
 ES_ENDPOINT=$1
-JENKINSELB=$2
 region=$3
 sed -i "s/{inst_elastic_search_hostname}/$ES_ENDPOINT/g " ./jazz-core/jazz_cloud-logs-streamer/index.js
 # this is done in bitbucketclient.sh since that is last script to run in this demo with existing instances
