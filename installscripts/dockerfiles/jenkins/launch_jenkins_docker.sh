@@ -46,9 +46,9 @@ sudo systemctl status docker &> /dev/null &
 spin_wheel $! "Checking docker-ce service"
 sudo systemctl enable docker &> /dev/null &
 spin_wheel $! "Enabling docker-ce service"
-sudo usermod -aG docker $(whoami) &> /dev/null &
-spin_wheel $! "Adding the present user to docker group"
-exec sudo su -l $USER
+# sudo usermod -aG docker $(whoami) &> /dev/null &
+# spin_wheel $! "Adding the present user to docker group"
+exec sg docker newgrp `id -gn`
 echo "Reloading user profile so group changes take effect"
 
 # Check if docker with same name exists. If yes, stop and remove the docker container.
