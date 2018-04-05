@@ -48,8 +48,8 @@ sudo systemctl enable docker &> /dev/null &
 spin_wheel $! "Enabling docker-ce service"
 sudo usermod -aG docker $(whoami) &> /dev/null &
 spin_wheel $! "Adding the present user to docker group"
-exec sudo su -l $USER &
-spin_wheel $i "Reloading user profile so group changes take effect"
+exec sudo su -l $USER
+echo "Reloading user profile so group changes take effect"
 
 # Check if docker with same name exists. If yes, stop and remove the docker container.
 docker ps -a | grep -i jenkins-server &> /dev/null
