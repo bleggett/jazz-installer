@@ -16,6 +16,7 @@ def add_gitlab_config_to_files(parameter_list):
     print("Adding Gitlab config to Terraform variables")
     tfvars_file = getJazzRoot() + TERRAFORM_FOLDER_PATH + "terraform.tfvars"
     replace_tfvars('scm_publicip', parameter_list[0], tfvars_file)
+    replace_tfvars('scm_elb', parameter_list[0], tfvars_file)
     replace_tfvars('scm_username', parameter_list[1], tfvars_file)
     replace_tfvars('scm_passwd', parameter_list[2], tfvars_file)
     replace_tfvars('scm_type', 'gitlab', tfvars_file)
