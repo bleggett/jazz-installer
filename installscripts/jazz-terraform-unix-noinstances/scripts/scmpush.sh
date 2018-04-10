@@ -1,4 +1,5 @@
 #!/bin/bash
+# TODO This script is trying to do too many things, split it up
 #General variables
 scmelb=$1
 scmuser=$2
