@@ -1,7 +1,6 @@
 resource "null_resource" "configureExistingJenkinsServer" {
 
-  depends_on = ["aws_api_gateway_rest_api.jazz-dev","aws_s3_bucket.jazz-web","aws_iam_role.lambda_role","aws_elasticsearch_domain.elasticsearch_domain","null_resource.ses_setup" ]
-
+  depends_on = ["aws_s3_bucket.jazz-web", "null_resource.update_jenkins_configs" ]
   connection {
     host = "${lookup(var.jenkinsservermap, "jenkins_public_ip")}"
     user = "${lookup(var.jenkinsservermap, "jenkins_ssh_login")}"
@@ -11,16 +10,7 @@ resource "null_resource" "configureExistingJenkinsServer" {
   }
 
   provisioner "local-exec" {
-    command = "${var.configureJenkinsSSHUser_cmd} ${lookup(var.jenkinsservermap, "jenkins_ssh_login")} ${var.jenkinsattribsfile} ${var.jenkinsclientrbfile}"
-  }
-  provisioner "local-exec" {
-    command = "${var.configureJenkinselb_cmd} ${lookup(var.jenkinsservermap, "jenkins_elb")} ${var.jenkinsattribsfile} ${lookup(var.jenkinsservermap, "jenkinsuser")} ${lookup(var.jenkinsservermap, "jenkinspasswd")}"
-  }
-  provisioner "local-exec" {
     command = "${var.configureJazzCore_cmd} ${var.envPrefix} ${var.cognito_pool_username}"
-  }
-  provisioner "local-exec" {
-    command = "${var.configurescmelb_cmd} ${var.scmbb} ${lookup(var.scmmap, "scm_elb")} ${var.jenkinsattribsfile} ${var.jenkinsjsonpropsfile} ${var.scmclient_cmd}"
   }
 
   #BEGIN chef cookbook edits TODO consider moving these to their own .tf file
@@ -61,6 +51,7 @@ resource "null_resource" "configureExistingJenkinsServer" {
   provisioner "local-exec" {
     command = "sed -i 's|jenkinsuser:jenkinspasswd|${lookup(var.jenkinsservermap, "jenkinsuser")}:${lookup(var.jenkinsservermap, "jenkinspasswd")}|g' ${var.cookbooksDir}/jenkins/files/default/authfile"
   }
+
   #Update Gitlab script in cookbook
   provisioner "local-exec" {
     command = "sed -i 's|<username>gitlabuser</username>|<username>${lookup(var.scmmap, "scm_username")}</username>|g' ${var.cookbooksDir}/jenkins/files/credentials/gitlab-user.sh"
@@ -69,8 +60,6 @@ resource "null_resource" "configureExistingJenkinsServer" {
   provisioner "local-exec" {
     command = "sed -i 's|<password>gitlabpassword</password>|<password>${lookup(var.scmmap, "scm_passwd")}</password>|g' ${var.cookbooksDir}/jenkins/files/credentials/gitlab-user.sh"
   }
-
-
   #END chef cookbook edits
 
   #Copy the chef playbooks and config over to the remote Jenkins server
@@ -98,35 +87,6 @@ resource "null_resource" "configureExistingJenkinsServer" {
     ]
   }
 
-  provisioner "local-exec" {
-    command = "sed -i 's/\"jenkins_username\"/\"${lookup(var.jenkinsservermap, "jenkinsuser")}\"/g' ${var.jenkinsjsonpropsfile}"
-  }
-  provisioner "local-exec" {
-    command = "${var.modifyPropertyFile_cmd} JENKINS_PASSWORD ${lookup(var.jenkinsservermap, "jenkinspasswd")} ${var.jenkinsjsonpropsfile}"
-  }
-  provisioner "local-exec" {
-    command = "sed -i 's/\"scm_username\"/\"${lookup(var.scmmap, "scm_username")}\"/g' ${var.jenkinsjsonpropsfile}"
-  }
-  provisioner "local-exec" {
-    command = "${var.modifyPropertyFile_cmd} PASSWORD ${lookup(var.scmmap, "scm_passwd")} ${var.jenkinsjsonpropsfile}"
-  }
-  provisioner "local-exec" {
-    command = "${var.modifyPropertyFile_cmd} ADMIN ${var.cognito_pool_username} ${var.jenkinsjsonpropsfile}"
-  }
-  provisioner "local-exec" {
-    command = "${var.modifyPropertyFile_cmd} PASSWD ${var.cognito_pool_password} ${var.jenkinsjsonpropsfile}"
-  }
-  provisioner "local-exec" {
-    command = "${var.modifyPropertyFile_cmd} ACCOUNTID ${var.jazz_accountid} ${var.jenkinsjsonpropsfile}"
-  }
-  provisioner "local-exec" {
-    command = "${var.modifyPropertyFile_cmd} REGION ${var.region} ${var.jenkinsjsonpropsfile}"
-  }
-  // Modifying subnet replacement before copying cookbooks to Jenkins server.
-  provisioner "local-exec" {
-    command = "${var.configureSubnet_cmd} ${lookup(var.jenkinsservermap, "jenkins_security_group")} ${lookup(var.jenkinsservermap, "jenkins_subnet")} ${var.envPrefix} ${var.jenkinsjsonpropsfile}"
-  }
-
   provisioner "file" {
     source      = "${var.cookbooksDir}"
     destination = "~/cookbooks"
@@ -136,30 +96,37 @@ resource "null_resource" "configureExistingJenkinsServer" {
     source      = "${var.cookbooksDir}/jenkins/recipes"
     destination = "~/cookbooks/jenkins"
   }
+
   provisioner "file" {
     source      = "${var.cookbooksDir}/jenkins/files/default"
     destination = "~/cookbooks/jenkins/files"
   }
+
   provisioner "file" {
     source      = "${var.cookbooksDir}/jenkins/files/jobs"
     destination = "~/cookbooks/jenkins/files"
   }
+
   provisioner "file" {
     source      = "${var.cookbooksDir}/jenkins/files/node"
     destination = "~/cookbooks/jenkins/files"
   }
+
   provisioner "file" {
     source      = "${var.cookbooksDir}/jenkins/files/scriptapproval"
     destination = "~/cookbooks/jenkins/files"
   }
+
   provisioner "file" {
     source      = "${var.cookbooksDir}/jenkins/files/credentials"
     destination = "~/cookbooks/jenkins/files"
   }
+
   provisioner "file" {
     source      = "${var.cookbooksDir}/jenkins/attributes"
     destination = "~/cookbooks/jenkins"
   }
+
   provisioner "file" {
     source      = "${var.cookbooksDir}/jenkins/attributes/"
     destination = "~/cookbooks/blankJenkins/attributes/"
@@ -219,6 +186,7 @@ resource "null_resource" "configureJazzBuildModule" {
     port = "${lookup(var.jenkinsservermap, "jenkins_ssh_port")}"
     private_key = "${file("${lookup(var.jenkinsservermap, "jenkins_ssh_key")}")}"
   }
+
   provisioner "remote-exec"{
     inline = [
       "git clone http://${lookup(var.scmmap, "scm_username")}:${lookup(var.scmmap, "scm_passwd")}@${lookup(var.scmmap, "scm_elb")}${lookup(var.scmmap, "scm_pathext")}/slf/jazz-build-module.git",
