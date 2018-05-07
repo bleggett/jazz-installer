@@ -26,9 +26,9 @@ jenkinsservermap = {
 
 #SCM server map (set programmatically by wizard, not directly by user or terraform)
 scmmap = {
-  scm_elb = "REPLACEME"
+  scm_elb = "UNUSED"
   scm_type = "REPLACEME"
-  scm_publicip = "REPLACEME"
+  scm_publicip = "UNUSED"
   scm_username = "REPLACEME"
   scm_passwd = "REPLACEME"
   scm_privatetoken = "REPLACEME"

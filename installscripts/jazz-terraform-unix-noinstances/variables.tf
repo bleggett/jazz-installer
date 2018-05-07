@@ -63,8 +63,8 @@ variable "scmmap" {
   type = "map"
   default = {
     scm_type = "replacescmtype"
-    scm_elb = "replaceelb"
-    scm_publicip = "replaceip"
+    scm_elb = "unused"
+    scm_publicip = "unused"
     scm_username = "replaceusername"
     scm_passwd = "replacepasswd"
     scm_privatetoken = "replacetoken"

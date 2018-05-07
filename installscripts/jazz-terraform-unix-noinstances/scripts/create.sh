@@ -5,7 +5,6 @@ print_error()
     printf "\r${RED}$1${NC}\n"
 }
 
-rm -f ./stack_details.json
 date
 terraform init && terraform apply \
                             --auto-approve \
@@ -20,7 +19,7 @@ then
     terraform destroy --auto-approve
     echo " ======================================================="
     echo " To cleanup Jazz stack and its resources execute ./destroy.sh in this directory."
-    realpath ../../
+    realpath ./
     echo " ======================================================="
     exit
 else
@@ -32,10 +31,10 @@ else
     echo " ======================================================="
     echo " Please use the following values for checking out Jazz"
     echo " ________________________________________________"
-    cat ./stack_details.json
+    terraform output
     echo " ======================================================="
     echo " Installation complete! To cleanup Jazz stack and its resources execute ./destroy.sh in this directory."
-    realpath ../../
+    realpath ./
     echo " ======================================================="
     exit
 fi
