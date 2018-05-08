@@ -19,7 +19,7 @@ output "region" {
   value = "${var.region}"
 }
 output "jazz_api_endpoint" {
-  region = "https://${aws_api_gateway_rest_api.jazz-prod.id}.execute-api.${var.region}.amazonaws.com/prod"
+  value = "https://${aws_api_gateway_rest_api.jazz-prod.id}.execute-api.${var.region}.amazonaws.com/prod"
 }
 
 #Jenkins-related output variables
