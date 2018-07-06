@@ -4,7 +4,7 @@ MAINTAINER JazzOSS Team
 
 # Switching to root to configure the image with system packages
 USER root
-RUN apt-get update && apt-get install -y vim curl sudo
+RUN apt-get update && apt-get install -y vim curl sudo lsb-release
 
 # Copying plugins list. Downlading and installing plugins from Jenkins PluginsManager
 COPY dockerfiles/jenkins-ce/plugins.txt /usr/share/jenkins/ref/plugins.txt
