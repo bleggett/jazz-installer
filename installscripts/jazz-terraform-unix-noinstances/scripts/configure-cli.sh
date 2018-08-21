@@ -3,6 +3,10 @@
 jenkinsurl=$1
 email=$2
 jenkinshome=$3
+  jenkinshome='/var/jenkins_home'
+else
+  jenkinshome='/var/lib/jenkins'
+fi
 scm_elb=$4
 gitlabuser=$5
 gitlabpassword=$6
@@ -26,6 +30,7 @@ if [ "$scm_type" == "bitbucket" ]; then
 fi
 
 java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl groovy = <<EOF
+$jenkins_cli_command groovy = <<EOF
 import jenkins.model.JenkinsLocationConfiguration
 c = JenkinsLocationConfiguration.get()
 c.url = 'http://$jenkinsurl'
@@ -46,19 +51,20 @@ else
 fi
 
 #credentials
+../jenkinscli/credentials/jobexec.sh "$jenkins_cli_command"
 ../jenkinscli/credentials/jobexec.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl"
 ../jenkinscli/credentials/sonar.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $sonaruser $sonarpassword
 ../jenkinscli/credentials/aws.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $aws_access_key $aws_secret_key
 ../jenkinscli/credentials/cognitouser.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $cognitouser $cognitopassword
 
 #Jobs
-../jenkinscli/jobs/job_create-service.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $scmpath
-../jenkinscli/jobs/job_delete-service.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $scmpath
-../jenkinscli/jobs/job_build_pack_api.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $scmpath
-../jenkinscli/jobs/job_cleanup_cloudfront_distributions.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $scmpath
-../jenkinscli/jobs/job_build_pack_lambda.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $scmpath
-../jenkinscli/jobs/job_build_pack_website.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $scmpath
-../jenkinscli/jobs/job_jazz_ui.sh "java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl" $scmpath
+../jenkinscli/jobs/job_create-service.sh "$jenkins_cli_command" $scmpath
+../jenkinscli/jobs/job_delete-service.sh "$jenkins_cli_command" $scmpath
+../jenkinscli/jobs/job_build_pack_api.sh "$jenkins_cli_command" $scmpath
+../jenkinscli/jobs/job_cleanup_cloudfront_distributions.sh "$jenkins_cli_command" $scmpath
+../jenkinscli/jobs/job_build_pack_lambda.sh "$jenkins_cli_command" $scmpath
+../jenkinscli/jobs/job_build_pack_website.sh "$jenkins_cli_command" $scmpath
+../jenkinscli/jobs/job_jazz_ui.sh "$jenkins_cli_command" $scmpath
 
 #restart
 java -jar jenkins-cli.jar -auth $jenkinsuser:$jpassword -s  http://$jenkinsurl restart
